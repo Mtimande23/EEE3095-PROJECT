@@ -14,7 +14,7 @@ import sys
 import threading
 import tkinter as tk
 from collections import deque
-from tkinter import messagebox, ttk
+from tkinter import ttk,messagebox
 
 import serial
 import serial.tools.list_ports
