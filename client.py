@@ -13,8 +13,8 @@ import re
 import sys
 import threading
 import tkinter as tk
-from collections import deque
 from tkinter import ttk,messagebox
+from collections import deque
 
 import serial
 import serial.tools.list_ports
