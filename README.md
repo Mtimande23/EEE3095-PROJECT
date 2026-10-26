@@ -149,12 +149,3 @@ changes are printed there.
 | `No module named serial` | `python -m pip install -r requirements.txt` |
 | `--port auto: no board found` | Check the USB cable and that the board appears under Device Manager > Ports (COM & LPT), then give that port, e.g. `--port COM12`. |
 
-## Status
-
-- Real board (UCT STM32F051C8, ST-Link virtual COM port): flashed; full game played
-  through the GUI (`docs/board_connect_com4.png`, `docs/board_win_x.png`); all 47
-  server tests passed on 2026-10-25 (`docs/board_pytest_2026-10-25.txt`).
-- PC simulator: all 63 tests pass; the GUI was driven end to end (screenshots in
-  `docs/gui_*.png`).
-- Firmware compiles for Cortex-M0 with no warnings; register addresses were checked
-  against ST's CMSIS headers.

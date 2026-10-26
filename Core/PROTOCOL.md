@@ -12,7 +12,7 @@
 
 | Rule | Server behaviour |
 |---|---|
-| Terminator | `\n` ends a frame. `\r` is ignored anywhere, so `\r\n` works. |
+| Terminator | `\n` or `\r` ends a frame, so `\r\n` works too (the empty frame between them is ignored) and Enter works in any terminal, e.g. PuTTY. |
 | Blank line | Ignored, no reply. |
 | Maximum length | 32 bytes before the `\n`. A longer frame is dropped whole up to its `\n` and answered with `NACK:TOOLONG`. |
 | Timeout | A frame with no new byte for 1000 ms is discarded and answered with `NACK:TIMEOUT`. |
@@ -143,3 +143,4 @@ sequenceDiagram
 |---|---|
 | Button (default PA0, active low, 30 ms debounce) | Abandons any game, returns to IDLE, sends `EVT:RESET`. |
 | LED (default PB0) | IDLE off; IN_PROGRESS solid on when X is to move, 1 Hz blink when O is to move; GAME_OVER 5 Hz blink. |
+| LCD | Cleared at start-up, so nothing an earlier program wrote stays on it. |
