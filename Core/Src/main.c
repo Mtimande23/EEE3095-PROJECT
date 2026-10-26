@@ -53,6 +53,7 @@ int main(void)
     uint8_t b;
 
     board_init();
+    board_lcd_clear();      /* wipe whatever an earlier project left on the LCD */
     server_init(&server);
 
     for (;;) {
