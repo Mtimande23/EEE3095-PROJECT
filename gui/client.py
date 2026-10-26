@@ -173,7 +173,9 @@ class App:
         self.f_mono = tkfont.Font(family=mono, size=9)
 
         root.title("Tic-Tac-Toe: STM32 serial game server")
-        root.minsize(460, 0)
+        # Stay hidden until _fit_to_screen has settled the final size, so the
+        # measuring pass never shows up as a window that draws then resizes.
+        root.withdraw()
         self.style = ttk.Style(root)
         try:
             self.style.theme_use("clam")
@@ -184,6 +186,7 @@ class App:
         self._apply_theme()
         self._set_status("Not connected. Choose a port and press Connect.", "muted")
         self._refresh_controls()
+        self._fit_to_screen()
         root.after(20, self._pump)
         root.protocol("WM_DELETE_WINDOW", self._on_close)
 
@@ -204,6 +207,7 @@ class App:
     def _build(self, initial_port):
         r = self.root
         r.columnconfigure(0, weight=1)
+        r.rowconfigure(8, weight=1)
 
         # Header: title, subtitle, theme and light/dark.
         self.header = tk.Frame(r, padx=16, pady=12)
@@ -346,9 +350,49 @@ class App:
         # Protocol log: every frame sent (>) and received (<), always visible.
         self.log_lbl = tk.Label(r, text="Protocol log", font=self.f_bold, anchor="w", padx=16)
         self.log_lbl.grid(row=7, column=0, sticky="ew")
-        self.log = tk.Listbox(r, height=8, font=self.f_mono, relief="flat",
+        self.log_frame = tk.Frame(r)
+        self.log_frame.grid(row=8, column=0, padx=16, pady=(2, 12), sticky="nsew")
+        self.log_frame.columnconfigure(0, weight=1)
+        self.log_frame.rowconfigure(0, weight=1)
+        self.log = tk.Listbox(self.log_frame, height=5, font=self.f_mono, relief="flat",
                               highlightthickness=1)
-        self.log.grid(row=8, column=0, padx=16, pady=(2, 12), sticky="ew")
+        self.log.grid(row=0, column=0, sticky="nsew")
+        self.log_scroll = ttk.Scrollbar(self.log_frame, orient="vertical",
+                                        command=self.log.yview)
+        self.log_scroll.grid(row=0, column=1, sticky="ns")
+        self.log.configure(yscrollcommand=self.log_scroll.set)
+
+    def _fit_to_screen(self):
+        """Open at the size the layout wants, but never taller than the screen.
+
+        On a small or scaled display the full layout is taller than the usable
+        desktop, and anything past the bottom edge (the log) is simply off
+        screen. Clamping the height keeps the log row inside the window; its
+        grid weight and scrollbar let it shrink instead of disappear.
+        """
+        r = self.root
+        r.update_idletasks()
+        avail_h = r.winfo_screenheight() - 120  # title bar, taskbar
+        # On a short desktop, shrink the board (the tallest row by far) until
+        # the layout fits, so the log keeps a usable slice of the window.
+        while r.winfo_reqheight() > avail_h and self.f_cell["size"] > 22:
+            self.f_cell["size"] = self.f_cell["size"] - 2
+            if self.f_title["size"] > 16:
+                self.f_title["size"] = self.f_title["size"] - 1
+            r.update_idletasks()
+        want_w = max(r.winfo_reqwidth(), 460)
+        want_h = r.winfo_reqheight()
+        avail_w = r.winfo_screenwidth() - 40
+        w = min(want_w, avail_w)
+        h = min(want_h, avail_h)
+        # Smallest height that still shows every row, with the log squeezed to
+        # one line, so the user cannot drag the log out of the window.
+        floor_h = want_h - (self.log.winfo_reqheight() - self.f_mono.metrics("linespace"))
+        r.minsize(min(want_w, avail_w), min(floor_h, avail_h))
+        x = max((r.winfo_screenwidth() - w) // 2, 0)
+        y = max((r.winfo_screenheight() - h) // 3, 0)
+        r.geometry(f"{w}x{h}+{x}+{y}")
+        r.deiconify()
 
     def _all_frames(self):
         return [self.root, self.header, self.header_right, self.conn, self.players,
@@ -406,6 +450,7 @@ class App:
             card["tag"].configure(bg=p["panel"], fg=p["muted"], text=tag)
             card["score"].configure(bg=p["panel"], fg=p[pl.lower()])
 
+        self.log_frame.configure(bg=p["bg"])
         self.log.configure(bg=p["panel"], fg=p["fg"], highlightbackground=p["border"],
                            selectbackground=p["hover"], selectforeground=p["fg"])
 
