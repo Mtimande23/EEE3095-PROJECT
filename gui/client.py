@@ -767,7 +767,7 @@ class App:
             return
 
         if cmd == "CONNECT" and line == "OK":
-            self._set_status("Connected.", "ok")
+            self._set_status("Connected.", "muted")   # not "ok", so STATE can resume a game in progress
             self._send("STATE")          # resync with whatever the board holds
         elif cmd == "NEW" and self._render(line):
             self._commit_names()

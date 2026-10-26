@@ -1,7 +1,7 @@
 CC      ?= cc
 CFLAGS  ?= -std=c11 -Wall -Wextra -Werror -O2
 OUT     ?= .
-FW      := ../firmware/Core
+FW      := ../Core
 SRCS    := sim_main.c $(FW)/Src/game.c $(FW)/Src/protocol.c
 
 $(OUT)/gamesim: $(SRCS) $(FW)/Inc/game.h $(FW)/Inc/protocol.h

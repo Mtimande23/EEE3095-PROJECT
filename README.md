@@ -5,10 +5,11 @@ the only copy of the game, validates every request and replies with the
 authoritative result. A thin Tkinter client on the PC draws the board from those
 replies and forwards clicks. The full protocol and state machine are in
 [docs/PROTOCOL.md](docs/PROTOCOL.md), and the diagrams are in
-[docs/diagrams/](docs/diagrams/) (see [Diagrams](#diagrams)).
+[docs/](docs/) (see [Diagrams](#diagrams)).
 
 The repository folder is itself the STM32CubeIDE project (an Empty Project: no
 CubeMX, no HAL).
+
 
 ```
 .project, .cproject    STM32CubeIDE project files (source folders: Core, Startup)

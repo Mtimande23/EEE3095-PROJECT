@@ -73,6 +73,7 @@ MOVE checks run in this order, and the first failure is reported: game in progre
 4. **Extra errors**: `NACK:STATE`, `NACK:TOOLONG`, `NACK:TIMEOUT`, `NACK:CHECKSUM` make each failure specific.
 5. **`EVT:RESET`** reports the button reset to the client.
 6. **WIN/DRAW replies do not include the board**, as in the brief. The client sends `STATE` afterwards to draw the final board.
+7. **`\r` also ends a frame**, not only `\n`, so a person can type commands in any terminal (PuTTY's Enter key sends only `\r`). The brief only asks for a defined terminator; `\r\n` still works because the empty frame between the two is ignored.
 
 ## Server state machine
 
