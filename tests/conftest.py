@@ -1,20 +1,24 @@
 """Fixtures for the serial game server tests.
 
 Run against the real board:
-    python -m pytest tests --port COM4          (Windows)
-    python -m pytest tests --port /dev/ttyACM0  (Linux)
+    python -m pytest tests --port auto          (finds the board's ST-Link port)
+    python -m pytest tests --port COM4          (or name the port yourself)
 or set GAME_PORT. With no port, the PC simulator in ../sim is built and
 started automatically (Linux/macOS, needs a C compiler and make).
 """
 import os
 import shutil
 import subprocess
+import sys
 import tempfile
 import time
 from pathlib import Path
 
 import pytest
 import serial
+
+sys.path.insert(0, str(Path(__file__).resolve().parent.parent / "gui"))
+import ports  # noqa: E402
 
 HERE = Path(__file__).resolve().parent
 SIM_DIR = HERE.parent / "sim"
@@ -25,7 +29,7 @@ POLL_S = 0.05
 
 def pytest_addoption(parser):
     parser.addoption("--port", default=os.environ.get("GAME_PORT"),
-                     help="serial port of the board; omit to use the simulator")
+                     help="serial port of the board, or 'auto' to find it; omit to use the simulator")
     parser.addoption("--baud", type=int, default=BAUD)
 
 
@@ -80,6 +84,12 @@ class Link:
 @pytest.fixture(scope="session")
 def port(request, tmp_path_factory):
     explicit = request.config.getoption("--port")
+    if explicit and explicit.lower() == "auto":
+        explicit = ports.find_board()
+        if explicit is None:
+            pytest.exit("--port auto: no board found. Plug it in, or give the port, "
+                        "e.g. --port COM4")
+        print(f"\nusing the board on {explicit}")
     if explicit:
         yield explicit
         return
