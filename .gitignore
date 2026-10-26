@@ -1,0 +1,8 @@
+__pycache__/
+.pytest_cache/
+sim/gamesim
+# STM32CubeIDE build output and per-user files
+**/Debug/
+**/Release/
+*.launch
+.metadata/
