@@ -3,8 +3,9 @@
 EEE3095S CS Project 2026. The STM32F051C8 (UCT STM board) is the referee: it holds
 the only copy of the game, validates every request and replies with the
 authoritative result. A thin Tkinter client on the PC draws the board from those
-replies and forwards clicks. The full protocol, state machine and diagrams are in
-[docs/PROTOCOL.md](docs/PROTOCOL.md).
+replies and forwards clicks. The full protocol and state machine are in
+[docs/PROTOCOL.md](docs/PROTOCOL.md), and the diagrams are in
+[docs/diagrams/](docs/diagrams/) (see [Diagrams](#diagrams)).
 
 The repository folder is itself the STM32CubeIDE project (an Empty Project: no
 CubeMX, no HAL).
@@ -22,7 +23,7 @@ gui/client.py          Tkinter + pyserial client
 gui/ai.py              AI opponent (Easy / Medium / Hard), runs on the PC
 tests/                 pytest harness that drives the serial link (63 tests)
 sim/                   optional PC simulator of the board (Linux/macOS/WSL only)
-docs/                  protocol, FSM, sequence diagram, screenshots, board test log
+docs/                  PROTOCOL.md, FSM, sequence, GUI flowchart, circuit, board test logs
 ```
 
 ## What you need
@@ -149,3 +150,14 @@ changes are printed there.
 | `No module named serial` | `python -m pip install -r requirements.txt` |
 | `--port auto: no board found` | Check the USB cable and that the board appears under Device Manager > Ports (COM & LPT), then give that port, e.g. `--port COM12`. |
 
+
+## Diagrams
+
+Each diagram is in `docs/` as a PNG (to view). They are the same figures as in the report.
+
+| Diagram | File | What it shows |
+|---|---|---|
+| Server state machine | [fsm.png](docs/fsm.png) | IDLE, IN_PROGRESS and GAME_OVER with every transition, and the checks a `MOVE` passes before anything is written |
+| Sequence diagram | [sequence.png](docs/sequence.png) | One session from `CONNECT` to `DISCONNECT`, including a rejected move |
+| GUI flowchart | [gui_flowchart.png](docs/gui_flowchart.png) | How the client handles a click and each kind of reply; the board is redrawn only from the server's reply |
+| Circuit | [circuit.png](docs/circuit.png) | USART1 to the PC through the ST-Link, button SW0 (PA0), LED D0 (PB0) and the LCD |

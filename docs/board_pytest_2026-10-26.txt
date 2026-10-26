@@ -1,0 +1,13 @@
+Final firmware, UCT STM32F051C8 board, ST-Link virtual COM port, Windows.
+
+C:\Users\themb\STM32CubeIDE\workspace_2.2.0\GameServer>python -m pytest tests --port auto
+============================= test session starts =============================
+platform win32 -- Python 3.14.7, pytest-9.1.1, pluggy-1.7.0
+rootdir: C:\Users\themb\STM32CubeIDE\workspace_2.2.0\GameServer
+plugins: anyio-4.15.1
+collected 63 items
+
+tests\test_ai.py ...............                                         [ 23%]
+tests\test_server.py ................................................    [100%]
+
+============================= 63 passed in 32.14s =============================
