@@ -24,6 +24,7 @@ import serial
 import serial.tools.list_ports
 
 import ai
+import ports
 
 BAUD = 115200
 REPLY_TIMEOUT_MS = 2000
@@ -491,10 +492,16 @@ class App:
     # ---------------------------------------------------------- refresh ---
 
     def _refresh_ports(self):
-        ports = [p.device for p in serial.tools.list_ports.comports()]
-        self.port_box["values"] = ports
-        if not self.port_var.get() and ports:
-            self.port_var.set(ports[0])
+        """List the PC's ports and pick the board's (found by its ST-Link USB ID)."""
+        found = [p.device for p in serial.tools.list_ports.comports()]
+        self.port_box["values"] = found
+        if self.port_var.get() in found:
+            return
+        board = ports.find_board()
+        if board:
+            self.port_var.set(board)
+        elif found and not self.port_var.get():
+            self.port_var.set(found[0])
 
     def _turn(self):
         x, o = self.board.count("X"), self.board.count("O")

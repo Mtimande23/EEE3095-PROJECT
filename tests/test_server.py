@@ -197,6 +197,13 @@ class TestRobustness:
     def test_crlf_is_accepted(self, link):
         link.send_raw(b"CONNECT\r\n")
         assert link.read_line() == "OK"
+        link.expect_silence()            # one reply, not two
+
+    def test_cr_alone_ends_a_frame(self, link):
+        """Terminals such as PuTTY send only '\\r' for Enter."""
+        link.send_raw(b"CONNECT\r")
+        assert link.read_line() == "OK"
+        link.expect_silence()
 
     def test_blank_lines_are_ignored(self, link):
         link.send_raw(b"\n\n\n")

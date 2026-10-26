@@ -45,10 +45,9 @@ int server_feed(server_t *s, uint8_t byte, uint32_t now_ms,
     framer_t *f = &s->framer;
     f->last_ms = now_ms;
 
-    if (byte == '\r')
-        return 0;
-
-    if (byte == '\n') {
+    /* '\r' or '\n' ends a frame, so Enter works in any terminal. The
+       '\n' of a "\r\n" pair then ends an empty frame, which is ignored. */
+    if (byte == '\n' || byte == '\r') {
         int handled = 1;
         if (f->overflow) {
             reply(resp, resp_len, "NACK:TOOLONG");

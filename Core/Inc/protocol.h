@@ -5,7 +5,8 @@
  * milliseconds (HAL_GetTick() on the board, a monotonic clock in the sim).
  *
  * Framing rules (see docs/PROTOCOL.md):
- *   - A frame is printable ASCII ending in '\n'. '\r' is ignored.
+ *   - A frame is printable ASCII ending in '\n' or '\r' (so "\r\n" works:
+ *     the empty frame between the two is ignored).
  *   - At most FRAME_MAX bytes before the '\n'; longer frames are discarded
  *     whole and answered with NACK:TOOLONG.
  *   - An incomplete frame older than FRAME_TIMEOUT_MS is discarded and
