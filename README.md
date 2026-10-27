@@ -33,7 +33,7 @@ docs/                  PROTOCOL.md, FSM, sequence, GUI flowchart, circuit, board
   virtual COM port, *STMicroelectronics STLink Virtual COM Port (COMx)*. The number
   differs from PC to PC (COM4, COM12, ...); you do not need to know it, because the
   GUI and the tests find the board by its ST-Link USB ID. No USB-UART adapter is
-  needed: the ST-Link's port is wired to USART1 (PA9/PA10).
+  needed: the ST-Link's port is wired to USART1 (PA9/PA10) for the newer STM32s.
 - STM32CubeIDE (tested with 2.x).
 - Python 3.9 or newer. On Windows tick *Add Python to PATH* when installing.
 
@@ -54,7 +54,7 @@ python -m pip install -r requirements.txt
 4. Press the board's reset button. The LCD is cleared and the LED (PB0) is off:
    the server is idle and waiting.
 
-To start from scratch instead: create an *STM32CubeIDE Empty Project* for
+To start from scratch instead (WHICH YOU MIGHT NOT NEED TO DO SO YOU CAN MIZE): create an *STM32CubeIDE Empty Project* for
 **STM32F051C8T6**, delete its `main.c`, and add the four firmware `.c` files to its
 `Src` folder and the three `.h` files to its `Inc` folder. Nothing else is needed: the
 firmware uses no HAL, CubeMX or CMSIS headers.
@@ -102,6 +102,8 @@ Details:
 - **Protocol log:** under the board, always visible: every frame sent (`>`) and
   received (`<`).
 
+NB: TAKE A LOOK AT THE LED PB0 WHEN PLAYING(workflow defined in Protocol.md)
+
 ## 3. Run the automated tests
 
 Close the GUI first (only one program can open the port), then:
@@ -129,7 +131,8 @@ seconds.
 
 `sim/` builds the same `game.c` and `protocol.c` for the PC and serves them on a
 virtual serial port, so the GUI and tests can run without a board. It is not part
-of the CubeIDE project and needs Linux, macOS or WSL (`cc` and `make`).
+of the CubeIDE project and needs Linux, macOS or WSL (`cc` and `make`). 
+NB: SO this is just a quick test on the GUI without actually getting it connected to the board.
 
 ```
 python -m pytest tests                  # no --port: builds and starts the simulator itself
